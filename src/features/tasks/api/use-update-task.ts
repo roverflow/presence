@@ -22,6 +22,10 @@ export const useUpdateTask = ({ isAbsence }: { isAbsence?: boolean }) => {
         param,
       });
 
+      if (isAbsence) {
+        console.log("isAbsence is true");
+      }
+
       if (!response.ok) {
         throw new Error("Failed to update task");
       }

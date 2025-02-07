@@ -2,8 +2,7 @@
 
 import { DownloadFormWrapper } from "@/features/downloader/components/download-wrapper";
 
-const DownloaderClient = ({ user }: { user: any }) => {
-  
+const DownloaderClient = () => {
   return <DownloadFormWrapper />;
 };
 

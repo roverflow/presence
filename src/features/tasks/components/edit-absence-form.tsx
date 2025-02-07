@@ -4,14 +4,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import {
-  createAbsenceSchema,
-  createRecordSchema,
-} from "@/features/tasks/schemas";
+import { createAbsenceSchema } from "@/features/tasks/schemas";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { Task } from "@/features/tasks/types";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { useUpdateTask } from "@/features/tasks/api/use-update-task";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -30,7 +26,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DottedSeperator } from "@/components/dotted-seperator";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/date-picker";
 

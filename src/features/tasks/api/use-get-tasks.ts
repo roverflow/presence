@@ -1,9 +1,8 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
 import { TaskStatus } from "@/features/tasks/types";
-import { toast } from "sonner";
 
 interface useGetTasksProps {
   week?: string | null;

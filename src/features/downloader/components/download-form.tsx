@@ -1,6 +1,6 @@
 "use client";
 
-import { optional, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -29,7 +29,6 @@ import { DottedSeperator } from "@/components/dotted-seperator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/date-picker";
-import { useGetTasks } from "@/features/tasks/api/use-get-tasks";
 import { useState } from "react";
 import PDFTable from "./pdf-doc";
 import { downloadTasks } from "@/features/tasks/api/use-download-task";

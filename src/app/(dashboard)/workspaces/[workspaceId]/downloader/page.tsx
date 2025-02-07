@@ -7,7 +7,7 @@ const WorkspaceIdMembersPage = async () => {
   const user = await getCurrent();
   if (!user) redirect("/sign-in");
 
-  return <DownloaderClient user={user} />;
+  return <DownloaderClient />;
 };
 
 export default WorkspaceIdMembersPage;
