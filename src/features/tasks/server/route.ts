@@ -567,6 +567,8 @@ const app = new Hono()
       if (!member) {
         return c.json({ error: "Unauthorized" }, 401);
       }
+      const strtDate = new Date(startDate);
+      const endDt = new Date(endDate);
 
       const task = await databases.createDocument(
         envKeys.appwriteDatabaseId,
@@ -575,9 +577,9 @@ const app = new Hono()
         {
           workspaceId,
           projectId,
-          startDate,
+          startDate: strtDate,
           assigneeId,
-          endDate,
+          endDate: endDt,
           reason,
         }
       );

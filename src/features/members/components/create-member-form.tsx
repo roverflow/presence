@@ -37,7 +37,11 @@ export const CreateMemberModalForm = ({ onCancel }: CreateProjectFormProps) => {
 
   const form = useForm<z.infer<typeof createMemberSchema>>({
     resolver: zodResolver(
-      createMemberSchema.omit({ workspaceId: true, role: true })
+      createMemberSchema.omit({
+        workspaceId: true,
+        role: true,
+        monthYear: true,
+      })
     ),
     defaultValues: {
       name: "",
@@ -49,6 +53,7 @@ export const CreateMemberModalForm = ({ onCancel }: CreateProjectFormProps) => {
       ...values,
       workspaceId,
       role: MemberRole.MEMBER,
+      monthYear: "none",
     };
     mutate(
       { json: finalValues, param: { workspaceId } },
@@ -64,7 +69,7 @@ export const CreateMemberModalForm = ({ onCancel }: CreateProjectFormProps) => {
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
-        <CardTitle className="text-xl font-bold">Add new Member</CardTitle>
+        <CardTitle className="text-xl font-bold">Add New Member</CardTitle>
       </CardHeader>
       <div className="px-7">
         <DottedSeperator />
@@ -80,7 +85,7 @@ export const CreateMemberModalForm = ({ onCancel }: CreateProjectFormProps) => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Enter project name" />
+                      <Input {...field} placeholder="Enter Name" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -112,19 +117,7 @@ export const CreateMemberModalForm = ({ onCancel }: CreateProjectFormProps) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="monthYear"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Month and Year</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter month and year" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
               <FormField
                 control={form.control}
                 name="managerName"

@@ -22,18 +22,18 @@ export const useCreateMember = () => {
       ]({ json, param });
 
       if (!response.ok) {
-        throw new Error("Failed to create workspace");
+        throw new Error("Failed to create member");
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Workspace created");
+      toast.success("Member added");
 
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
     },
     onError: () => {
-      toast.error("Failed to create workspace");
+      toast.error("Failed to create member");
     },
   });
 

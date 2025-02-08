@@ -33,6 +33,7 @@ import { DatePicker } from "@/components/date-picker";
 
 import { cn } from "@/lib/utils";
 import { calculateHrsWorked } from "../utils";
+import { useGetMembers } from "@/features/members/api/use-get-members";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -59,6 +60,39 @@ export const CreateTaskForm = ({
       workspaceId,
     },
   });
+
+  const dueDate = form.watch("dueDate");
+  const project = form.watch("projectId");
+
+  const shouldFetchMembers = project && dueDate;
+
+  const {
+    data: members,
+    isLoading: isMembersLoading,
+    isError: isMembersError,
+  } = useGetMembers(
+    shouldFetchMembers
+      ? {
+          workspaceId,
+          dateToGet: dueDate.toISOString(), // Trigger fetch when date changes
+          projectId: project,
+        }
+      : { workspaceId, enabled: false }
+  );
+
+  const formatMembers = (members: { $id: string; name: string }[]) => {
+    if (!members) return [];
+
+    return members?.map((member: { $id: string; name: string }) => ({
+      id: member.$id,
+      name: member.name,
+    }));
+  };
+
+  const optionsToUse =
+    members && !isMembersError && !isMembersLoading
+      ? formatMembers(members?.documents as { $id: string; name: string }[])
+      : memberOptions;
 
   const onSubmit = async (values: z.infer<typeof createRecordSchema>) => {
     const final = {
@@ -111,53 +145,6 @@ export const CreateTaskForm = ({
               />
               <FormField
                 control={form.control}
-                name="week"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Week</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="number" max={24} min={0} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="assigneeId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <Select
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Name" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <FormMessage />
-
-                      <SelectContent>
-                        {memberOptions.map((member) => (
-                          <SelectItem key={member.id} value={member.id}>
-                            <div className="flex items-center gap-x-2">
-                              <MemberAvatar
-                                className="size-6"
-                                name={member.name}
-                              />
-                              {member.name}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="projectId"
                 render={({ field }) => (
                   <FormItem>
@@ -191,6 +178,58 @@ export const CreateTaskForm = ({
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="week"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Week</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="number" max={24} min={0} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="assigneeId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Name" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <FormMessage />
+                      <SelectContent>
+                        {optionsToUse.map(
+                          (member: { id: string; name: string }) => (
+                            <SelectItem
+                              key={member.id}
+                              value={String(member.id)}
+                            >
+                              <div className="flex items-center gap-x-2">
+                                <MemberAvatar
+                                  className="size-6"
+                                  name={String(member?.name ?? "name")}
+                                />
+                                {member.name}
+                              </div>
+                            </SelectItem>
+                          )
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
               <div className="flex w-full gap-4">
                 <FormField
                   control={form.control}

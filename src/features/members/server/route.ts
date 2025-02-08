@@ -14,13 +14,25 @@ const app = new Hono()
   .get(
     "/",
     sessionMiddleware,
-    zValidator("query", z.object({ workspaceId: z.string() })),
+    zValidator(
+      "query",
+      z.object({
+        workspaceId: z.string(),
+        dateToGet: z.string().optional(),
+        projectId: z.string().optional(),
+      })
+    ),
     async (c) => {
       const { users } = await createAdminClient();
       const databases = c.get("databases");
       const user = c.get("user");
 
-      const { workspaceId } = c.req.valid("query");
+      const { workspaceId, dateToGet, projectId } = c.req.valid("query");
+
+      if (dateToGet || projectId) {
+        console.log("dateToGet", dateToGet);
+        console.log("projectId", projectId);
+      }
 
       const member = await getMember({
         databases,
@@ -38,21 +50,42 @@ const app = new Hono()
         [Query.equal("workspaceId", workspaceId)]
       );
 
+      let absence = [];
+      if (projectId && dateToGet) {
+        const actDate = new Date(dateToGet);
+        const holidays = await databases.listDocuments(
+          envKeys.appwriteDatabaseId,
+          envKeys.appwriteCollectionAbsenceId,
+          [
+            Query.equal("workspaceId", workspaceId),
+            Query.equal("projectId", projectId),
+            Query.lessThanEqual("startDate", actDate.toISOString()),
+            Query.greaterThanEqual("endDate", actDate.toISOString()),
+          ]
+        );
+        absence = holidays.documents.map((holiday) => holiday.assigneeId);
+        console.log("absence", absence);
+      }
+
       const populatedMembers = await Promise.all(
-        members.documents.map(async (member) => {
-          if (member.role === MemberRole.ADMIN) {
-            const user = await users.get(member.userId);
-            const { name, email } = user;
-            return {
-              ...member,
-              name,
-              email,
-            };
-          } else {
-            return { ...member };
-          }
-        })
+        members.documents
+          .filter((member) => !absence.includes(member.$id))
+          .map(async (member) => {
+            if (member.role === MemberRole.ADMIN) {
+              const user = await users.get(member.userId);
+              const { name, email } = user;
+              return {
+                ...member,
+                name,
+                email,
+              };
+            } else {
+              return { ...member };
+            }
+          })
       );
+
+      console.log("populatedMembers", populatedMembers);
 
       return c.json({
         data: {

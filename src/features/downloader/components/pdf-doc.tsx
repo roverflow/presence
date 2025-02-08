@@ -15,7 +15,7 @@ const MyDocument = ({ data }: { data: any }) => {
     head: [
       [
         "Term",
-        "week",
+        "Week",
         "Name",
         "Date",
         "In Time",
@@ -25,6 +25,7 @@ const MyDocument = ({ data }: { data: any }) => {
       ],
     ],
     body: data,
+    styles: { halign: "center" },
   });
 
   const download = () => {

@@ -4,14 +4,26 @@ import { client } from "@/lib/rpc";
 
 interface useGetMembersProps {
   workspaceId: string;
+  dateToGet?: string | undefined;
+  projectId?: string | undefined;
+  enabled?: boolean;
 }
 
-export const useGetMembers = ({ workspaceId }: useGetMembersProps) => {
+export const useGetMembers = ({
+  workspaceId,
+  dateToGet = undefined,
+  projectId = undefined,
+  enabled = true,
+}: useGetMembersProps) => {
   const query = useQuery({
-    queryKey: ["members", workspaceId],
+    queryKey: ["members", workspaceId, dateToGet, projectId],
     queryFn: async () => {
+      if (!enabled) {
+        return;
+      }
+
       const response = await client.api.members.$get({
-        query: { workspaceId },
+        query: { workspaceId, dateToGet, projectId },
       });
 
       if (!response.ok) {

@@ -67,7 +67,7 @@ export const DownloadForm = ({
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
-        <CardTitle className="text-xl font-bold">Download records</CardTitle>
+        <CardTitle className="text-xl font-bold">Download Records</CardTitle>
       </CardHeader>
       <div className="px-7">
         <DottedSeperator />
