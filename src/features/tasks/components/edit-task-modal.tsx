@@ -10,10 +10,10 @@ export const EditTaskModal = () => {
 
   return (
     <ResponsiveModal open={!!taskId} onOpenChange={close}>
-      {taskId && !isAbsence && (
+      {taskId && isAbsence !== "true" && (
         <EditTaskFormWrapper id={taskId} onCancel={close} />
       )}
-      {taskId && isAbsence && (
+      {taskId && isAbsence == "true" && (
         <EditAbsenceFormWrapper id={taskId} onCancel={close} />
       )}
     </ResponsiveModal>

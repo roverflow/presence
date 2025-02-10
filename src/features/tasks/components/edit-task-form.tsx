@@ -50,9 +50,7 @@ export const EditTaskForm = ({
 }: EditTaskFormProps) => {
   // make sure type is Task for this component
 
-  const { mutate, isPending } = useUpdateTask({
-    isAbsence: false,
-  });
+  const { mutate, isPending } = useUpdateTask();
 
   const transformInitialValues = (initialValues: Task | Absence) => {
     const { break: breakTime, ...rest } = initialValues;

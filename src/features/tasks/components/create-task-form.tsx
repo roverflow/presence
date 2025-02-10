@@ -83,16 +83,18 @@ export const CreateTaskForm = ({
   const formatMembers = (members: { $id: string; name: string }[]) => {
     if (!members) return [];
 
-    return members?.map((member: { $id: string; name: string }) => ({
-      id: member.$id,
-      name: member.name,
-    }));
+    return members
+      ?.map((member: { $id: string; name: string }) => ({
+        id: member.$id,
+        name: member.name,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   };
 
   const optionsToUse =
     members && !isMembersError && !isMembersLoading
       ? formatMembers(members?.documents as { $id: string; name: string }[])
-      : memberOptions;
+      : memberOptions.sort((a, b) => a.name.localeCompare(b.name));
 
   const onSubmit = async (values: z.infer<typeof createRecordSchema>) => {
     const final = {
@@ -279,6 +281,21 @@ export const CreateTaskForm = ({
                           pattern="^\d{1,2}:\d{2}$"
                           maxLength={5}
                           placeholder="1:30"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value);
+                          }}
+                          onBlur={(e) => {
+                            const value = e.target.value;
+                            if (
+                              value === "0" ||
+                              value === "0:00" ||
+                              value === "00:0" ||
+                              value === "00:00"
+                            ) {
+                              field.onChange("00:00");
+                            }
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

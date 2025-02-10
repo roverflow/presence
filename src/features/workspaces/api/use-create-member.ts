@@ -31,6 +31,10 @@ export const useCreateMember = () => {
       toast.success("Member added");
 
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      const url = new URL(window.location.href);
+      url.searchParams.delete("create-member");
+      window.history.replaceState({}, document.title, url.toString());
+      window.location.reload();
     },
     onError: () => {
       toast.error("Failed to create member");

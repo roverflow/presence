@@ -7,7 +7,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ImageIcon } from "lucide-react";
-import { toast } from "sonner";
 
 import { createProjectSchema } from "@/features/projects/schemas";
 import { useCreateProject } from "@/features/projects/api/use-create-project";
@@ -28,7 +27,6 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import "@uploadthing/react/styles.css";
-import { UploadButton } from "@/utils/uploadthing";
 import { cn } from "@/lib/utils";
 
 interface CreateProjectFormProps {
@@ -94,7 +92,7 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                 control={form.control}
                 name="image"
                 render={({ field }) => (
-                  <div className="flex flex-col gap-y-2">
+                  <div className="hidden flex-col gap-y-2">
                     <div className="flex items-center gap-x-5">
                       {field.value ? (
                         <div className="size-[72px] relative rounded-md overflow-hidden">
@@ -117,19 +115,6 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                         <p className="text-sm text-muted-foreground">
                           JPG, PNG, or JPEG, max 1mb
                         </p>
-                        <UploadButton
-                          className="mt-2"
-                          endpoint="imageUploader"
-                          onClientUploadComplete={(res) => {
-                            toast.success("Image Uploaded Successfully");
-                            form.setValue("image", res[0].url);
-                          }}
-                          onUploadError={(error: Error) => {
-                            toast.error(
-                              `Failed to upload image!, ${error.message}`
-                            );
-                          }}
-                        />
                       </div>
                     </div>
                   </div>

@@ -50,7 +50,7 @@ export const WorkSpaceIdClient = () => {
         />
         <MemberList
           data={members.documents}
-          total={projects.total}
+          total={members.total}
           workspaceId={workspaceId}
         />
       </div>

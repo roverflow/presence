@@ -12,7 +12,7 @@ type RequestType = InferRequestType<
   (typeof client.api.tasks)[":taskId"]["$patch"]
 >;
 
-export const useUpdateTask = ({ isAbsence }: { isAbsence?: boolean }) => {
+export const useUpdateTask = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
@@ -21,10 +21,6 @@ export const useUpdateTask = ({ isAbsence }: { isAbsence?: boolean }) => {
         json,
         param,
       });
-
-      if (isAbsence) {
-        console.log("isAbsence is true");
-      }
 
       if (!response.ok) {
         throw new Error("Failed to update task");
