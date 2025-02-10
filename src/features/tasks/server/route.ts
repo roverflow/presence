@@ -149,6 +149,7 @@ const app = new Hono()
         })
       );
 
+      let totalHrs = 0;
       const populatedTasks = tasks.documents.map((task) => {
         const project = projects.documents.find(
           (project) => project.$id === task.projectId
@@ -157,6 +158,7 @@ const app = new Hono()
         const assignee = assignees.find(
           (assignee) => assignee.$id === task.assigneeId
         );
+        totalHrs += task.hrsWorked;
         return {
           ...task,
           project,
@@ -184,6 +186,7 @@ const app = new Hono()
           ...tasks,
           documents: populatedTasks,
           absence: populatedAbsence,
+          totalHrs: totalHrs,
         },
       });
     }

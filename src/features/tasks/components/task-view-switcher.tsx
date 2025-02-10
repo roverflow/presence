@@ -109,7 +109,12 @@ export const TaskViewSwitcher = ({
         ) : (
           <>
             <TabsContent value="table" className="mt-0">
-              <DataTable columns={columns} data={tasks?.documents ?? []} />
+              <DataTable
+                columns={columns}
+                data={tasks?.documents ?? []}
+                isRecord={true}
+                totalHours={tasks?.totalHrs ?? 0}
+              />
             </TabsContent>
 
             {/* <DataKanban

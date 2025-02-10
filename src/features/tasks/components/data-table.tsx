@@ -27,11 +27,15 @@ import { Button } from "@/components/ui/button";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isRecord?: boolean;
+  totalHours?: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isRecord = false,
+  totalHours = 0,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -105,6 +109,13 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      {isRecord && totalHours != 0 && (
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="border p-2 rounded-lg">
+            Total Hours - {totalHours}
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
