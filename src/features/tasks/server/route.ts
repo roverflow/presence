@@ -31,6 +31,7 @@ const app = new Hono()
         dueDate: z.string().nullish(),
         search: z.string().nullish(),
         week: z.number().nullish(),
+        isAbsence: z.string().optional(),
       })
     ),
     async (c) => {
@@ -38,7 +39,7 @@ const app = new Hono()
       const databases = c.get("databases");
       const user = c.get("user");
 
-      const { assigneeId, dueDate, projectId, workspaceId, search } =
+      const { assigneeId, dueDate, projectId, workspaceId, search, isAbsence } =
         c.req.valid("query");
 
       const member = await getMember({
@@ -73,6 +74,9 @@ const app = new Hono()
 
       if (dueDate) {
         query.push(Query.equal("dueDate", dueDate));
+      }
+
+      if (dueDate && isAbsence) {
         absenceQuery.push(Query.equal("startDate", dueDate));
       }
 

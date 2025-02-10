@@ -3,18 +3,33 @@ import { toast } from "sonner";
 
 export const downloadTasks = async (query: any) => {
   try {
-    const response = await client.api.tasks.$get({ query });
+    const response = await client.api.tasks.$get({
+      query: { ...query, isAbsence: false },
+    });
+
+    console.log(response);
 
     if (!response.ok) {
       throw new Error("Failed to download tasks");
     }
 
     const final = await response.json();
-    console.log(final);
-    toast.success("Download started");
+
+    toast.success("Successfully Fetch Records");
+    if (final && final.data.total === 0) {
+      toast.error("No records found for the selected filters");
+    }
+
     return final;
   } catch (error) {
     toast.error("Failed to download");
-    throw error;
+    console.error(error);
+    return {
+      data: {
+        documents: [],
+        absence: [],
+        total: 0,
+      },
+    };
   }
 };
