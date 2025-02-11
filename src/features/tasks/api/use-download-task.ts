@@ -7,17 +7,16 @@ export const downloadTasks = async (query: any) => {
       query: { ...query, isAbsence: false },
     });
 
-    console.log(response);
-
     if (!response.ok) {
       throw new Error("Failed to download tasks");
     }
 
     const final = await response.json();
 
-    toast.success("Successfully Fetch Records");
     if (final && final.data.total === 0) {
       toast.error("No records found for the selected filters");
+    } else {
+      toast.success("Successfully fetched records");
     }
 
     return final;

@@ -42,6 +42,8 @@ const app = new Hono()
       const { assigneeId, dueDate, projectId, workspaceId, search, isAbsence } =
         c.req.valid("query");
 
+      const absen = isAbsence === "true";
+
       const member = await getMember({
         databases,
         workspaceId,
@@ -73,10 +75,11 @@ const app = new Hono()
       }
 
       if (dueDate) {
-        query.push(Query.equal("dueDate", dueDate));
+        const isoDate = new Date(dueDate).toISOString();
+        query.push(Query.equal("dueDate", isoDate));
       }
 
-      if (dueDate && isAbsence) {
+      if (dueDate && absen) {
         absenceQuery.push(Query.equal("startDate", dueDate));
       }
 

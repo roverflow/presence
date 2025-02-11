@@ -80,21 +80,21 @@ export const CreateTaskForm = ({
       : { workspaceId, enabled: false }
   );
 
-  const formatMembers = (members: { $id: string; name: string }[]) => {
-    if (!members) return [];
+  if (isMembersLoading || isMembersError) {
+    console.log("Loading or error");
+  }
 
-    return members
-      ?.map((member: { $id: string; name: string }) => ({
-        id: member.$id,
-        name: member.name,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  };
+  const allMembers = memberOptions.map((member) => {
+    const isPresent = members?.documents.some((m) => m.$id === member.id);
+    return {
+      ...member,
+      isPresent,
+    };
+  });
 
-  const optionsToUse =
-    members && !isMembersError && !isMembersLoading
-      ? formatMembers(members?.documents as { $id: string; name: string }[])
-      : memberOptions.sort((a, b) => a.name.localeCompare(b.name));
+  const sortedMembers = allMembers.sort((a, b) => a.name.localeCompare(b.name));
+
+  const optionsToUse = sortedMembers;
 
   const onSubmit = async (values: z.infer<typeof createRecordSchema>) => {
     const final = {
@@ -211,10 +211,15 @@ export const CreateTaskForm = ({
                       <FormMessage />
                       <SelectContent>
                         {optionsToUse.map(
-                          (member: { id: string; name: string }) => (
+                          (member: {
+                            id: string;
+                            name: string;
+                            isPresent: boolean | undefined;
+                          }) => (
                             <SelectItem
                               key={member.id}
                               value={String(member.id)}
+                              disabled={!member.isPresent}
                             >
                               <div className="flex items-center gap-x-2">
                                 <MemberAvatar
@@ -222,6 +227,15 @@ export const CreateTaskForm = ({
                                   name={String(member?.name ?? "name")}
                                 />
                                 {member.name}
+                                <span
+                                  className={
+                                    member.isPresent
+                                      ? "text-green-500"
+                                      : "text-red-500"
+                                  }
+                                >
+                                  {member.isPresent ? "Present" : "Absent"}
+                                </span>
                               </div>
                             </SelectItem>
                           )

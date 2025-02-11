@@ -57,6 +57,7 @@ export const DownloadForm = ({
 
   const onSubmit = async (values: z.infer<typeof createRecordSchema>) => {
     setIsLoading(true);
+
     const { data } = await downloadTasks(values);
     const final = (data.documents as any[]) ?? [];
     setIsLoading(false);
